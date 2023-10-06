@@ -1,0 +1,127 @@
+global class AgreementsRequestController {
+
+    public final Application__c applicationobj{get;set;}
+    
+	//template Name, list of agreements for that template
+    
+	public Map<String, List<echosign_dev1__SIGN_Agreement__c>> allAgreements{get;set;}
+    	public Map<String, echosign_dev1__Agreement_Template__c> allAgreementsT{get;set;}
+    
+    
+    
+    
+    public AgreementsRequestController(ApexPages.StandardController stdCont){
+        applicationobj = (Application__c)stdCont.getRecord();  
+        loadAgreements();
+    }
+
+    public void loadAgreements(){
+      
+        allAgreements = new Map<String, List<echosign_dev1__SIGN_Agreement__c>>();
+        allAgreementsT = new Map<String, echosign_dev1__Agreement_Template__c>();
+        
+        List<echosign_dev1__Agreement_Template__c> allAgreementTemplates;
+        
+       
+        if(applicationobj.id != null){
+            applst = [SELECT ID, FA_Docs_Complete__c, FA_Docs_Total__c, Hours_check__c, Program_code__c, Program_type__c, student__r.School_Status__c, Admission_Packet_Temp_Id__c,
+                    Adobe_App_Template_ID__c, Enrollment_Packet_Adobe_ID__c,ADD_Status__c,Criminal_History_ADD__c,DisabilityServices_ADD__c,Physical_Requirements_ADD__c, ADD_Template_Id__c,Background_Release_Doc__c, Preferred_Start_Period__c, Citizenship_Status__c,
+                    State__c, Adobe_Template_ID__c,(SELECT Id, Status FROM cases__r where status!='Closed')  
+                    FROM APPLICATION__C where id=:applicationobj.id];
+            
+            programStatus = applst.Program_type__c;
+            system.debug('application related case===>'+applst.cases__r);
+            if (applst.cases__r != null){
+                for (Case c : applst.cases__r){
+                    
+                    FieldValue =c.status;
+                    system.debug('FieldValue===>'+FieldValue);
+                }
+                
+            }
+            
+            if(applst.Admission_Packet_Temp_Id__c!=NULL && applst.Citizenship_Status__c !='Non-citizen' ){
+                for(Automatic_Agreement__c autoAgg:[select  Agreement_Template__r.name,Program_code__c,name  from Automatic_Agreement__c where Agreement_Template__c=:applst.Admission_Packet_Temp_Id__c OR Agreement_Template__c=:applst.Adobe_App_Template_ID__c]){
+                    
+                    tempNames.add(autoAgg.Agreement_Template__c );
+                    admissionPacket=autoAgg.Agreement_Template__r.name;                 
+                }
+            }
+            if(applst.Enrollment_Packet_Adobe_ID__c!=NULL  && (applst.Program_type__c=='Online'&& applst.Citizenship_Status__c !='Non-citizen'||applst.Program_type__c=='Ground')){
+                for(Automatic_Agreement__c autoAgg:[select Agreement_Template__c,Name,  Agreement_Template__r.name,Program_code__c  from Automatic_Agreement__c where Agreement_Template__c=:applst.Enrollment_Packet_Adobe_ID__c ]){
+                  
+                    enrollmentPacketNames.add(autoAgg.Agreement_Template__r.name);
+                    tempNames.add(autoAgg.Agreement_Template__c );
+                    enrollementPacket=autoAgg.Agreement_Template__r.name;
+                  
+                }
+            }
+        }
+        
+        
+        if (!String.isBlank(searchedText) && searchedText.length() > 2){
+            searchedTextUsed = '%'+searchedText+'%';
+            if (!String.isBlank(selectedCategory)){
+                allAgreementTemplates = [select id, Name, Category__c, Prefill_Needed__c,echosign_dev1__Agreement_Type__r.Name  from echosign_dev1__Agreement_Template__c where Category__c=:selectedCategory and (echosign_dev1__Agreement_Type__r.Name = 'app_community' or echosign_dev1__Agreement_Type__r.Name = 'FA' or  (echosign_dev1__Agreement_Type__r.Name = 'EP_Packet' and Id IN:tempNames)) and Name like: searchedTextUsed]; 
+            }else{
+                allAgreementTemplates = [select id, Name, Category__c, Prefill_Needed__c,echosign_dev1__Agreement_Type__r.Name  from echosign_dev1__Agreement_Template__c where (echosign_dev1__Agreement_Type__r.Name = 'app_community' or echosign_dev1__Agreement_Type__r.Name = 'FA' or  (echosign_dev1__Agreement_Type__r.Name = 'EP_Packet' and Id IN:tempNames)) and Name like: searchedTextUsed]; 
+            }
+            
+        }else{
+            if (!String.isBlank(selectedCategory)){
+                allAgreementTemplates = [select id, Name, Category__c, Prefill_Needed__c,echosign_dev1__Agreement_Type__r.Name,LastModifiedBy.Profile.Name  from echosign_dev1__Agreement_Template__c where   Category__c=:selectedCategory and (echosign_dev1__Agreement_Type__r.Name = 'app_community' or echosign_dev1__Agreement_Type__r.Name = 'FA' or  (echosign_dev1__Agreement_Type__r.Name = 'EP_Packet' and Id IN:tempNames))  ]; 
+            }else{
+                allAgreementTemplates = [select id, Name, Category__c, Prefill_Needed__c,echosign_dev1__Agreement_Type__r.Name,LastModifiedBy.Profile.Name  from echosign_dev1__Agreement_Template__c where   echosign_dev1__Agreement_Type__r.Name = 'app_community' or echosign_dev1__Agreement_Type__r.Name = 'FA' or  (echosign_dev1__Agreement_Type__r.Name = 'EP_Packet' and Id IN:tempNames)  ]; 
+            }
+        }
+        
+        for (echosign_dev1__Agreement_Template__c at: allAgreementTemplates){
+              
+            agreementTemplateNames.add(at.Name);
+        } 
+
+        system.debug(allIdAgreements);
+		
+        for (echosign_dev1__Agreement_Template__c temp: allAgreementTemplates){
+            allAgreementsT.put(temp.Name, temp);
+            if (!allAgreements.containsKey(temp.Name)){
+                List<echosign_dev1__SIGN_Agreement__c> auxAgreementList = new List<echosign_dev1__SIGN_Agreement__c>();
+                
+                echosign_dev1__SIGN_Agreement__c auxAgreement = new echosign_dev1__SIGN_Agreement__c();
+                auxAgreement.Name = temp.Name;
+                auxAgreement.echosign_dev1__Status__c = 'Not Sent';
+                auxAgreementList.add(auxAgreement);
+                if(temp.Name!='AM - Online Readiness Assessment'){
+                    allAgreements.put(temp.Name, auxAgreementList);
+                }
+                
+            }
+        }
+    }
+    
+    
+  public  PageReference sendAgreement(){
+	
+		template = [select id,Name, Prefill_Needed__c from echosign_dev1__Agreement_Template__c where  (echosign_dev1__Agreement_Type__r.Name = 'app_community' or echosign_dev1__Agreement_Type__r.Name = 'EP_Packet' or echosign_dev1__Agreement_Type__r.Name = 'FA') and Name=:templateName][0]; 
+        
+		if (!template.Prefill_Needed__c){
+            Id agreementId = echosign_dev1.AgreementTemplateService.load(template.id, applicationobj.id);
+			echosign_dev1.EchoSignApiService.sendDocument(agreementId);
+            echosign_dev1__SIGN_Agreement__c a = [select id, Application__c, echosign_dev1__Document_Key__c from echosign_dev1__SIGN_Agreement__c where id =:agreementId limit 1];
+            a.Application__c = applicationobj.id;
+            
+            return null;
+      }else{
+           
+            PageReference pageRef = new PageReference('/apex/echosign_dev1__AgreementTemplateProcess?masterid='+applicationobj.id+'&templateId='+template.id);
+            return pageRef;
+        }
+    }
+	
+	
+	
+	/*public static Id agreementId=null;
+    public static String masterRecordId='0015i00000KybfnAAB';
+    public static String agreementTemplateId='a0B5i000006FXwhEAG';
+    agreementId = echosign_dev1.AgreementTemplateService.load(agreementTemplateId,masterRecordId);
+	echosign_dev1.EchoSignApiService.sendDocument(agreementId);*/
