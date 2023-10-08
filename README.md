@@ -61,17 +61,17 @@ The **echosign_dev1.AgreementTemplateVariable** global class has two global fiel
 Every method either return the ID of the newly created agreement record or throws an exception with a detailed error message if something went wrong during the load operation.
 
 **API Service**
-The Adobe e-Sign API template service is exposed as a global Apex service by the managed package. This allows Apex code outside of the managed package to invoke a set of Adobe e-Sign API's through these wrappers. The wrappers greatly simplify the API invocation because consumers do not need to create request and response data model. 
+* The Adobe e-Sign API template service is exposed as a global Apex service by the managed package. This allows Apex code outside of the managed package to invoke a set of Adobe e-Sign API's through these wrappers. The wrappers greatly simplify the API invocation because consumers do not need to create request and response data model.
+  
+* Also consumers do not need to handle the transformation of Salesforce data into e-Sign data models. Most of the complexity is abstracted from the consumer.
 
-Also consumers do not need to handle the transformation of Salesforce data into e-Sign data models. Most of the complexity is abstracted from the consumer. 
+* For example, to send an agreement the consumer just passes in the agreement record ID, the service will handle querying it, extracting all of the relevant data, passing it on the API and parsing the result.
+  
+* The class and all exposed methods are marked as global to allow such access.
+  * v17 and below invokes SOAP API's
+  * v18 and above invokes REST API's
 
-For example, to send an agreement the consumer just passes in the agreement record ID, the service will handle querying it, extracting all of the relevant data, passing it on the API and parsing the result.
-
-The class and all exposed methods are marked as global to allow such access.
-
-v17 and below invokes SOAP API's
-v18 and above invokes REST API's
-The Apex service is exposed through the following invocation class: echosign_dev1.EchoSignApiService
+* The Apex service is exposed through the following invocation class: echosign_dev1.EchoSignApiService
 
 
 
