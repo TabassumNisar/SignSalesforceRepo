@@ -96,9 +96,52 @@ Every method either return the ID of the newly created agreement record or throw
     * Submitter user record, used to notify this user through an email once the bulk processing completes.
 
 **USAGE EXAMPLE**
-**User submitterUser = UserInfo.getUserId();**
+  **User submitterUser = UserInfo.getUserId();**
 
-**EchoSignActionBatch batch = new EchoSignActionBatch( agreementIds, 'Remind', UserInfo.getSessionId(), submitterUser); syncProcessId = Database.executeBatch(batch, 5);**
+  **EchoSignActionBatch batch = new EchoSignActionBatch( agreementIds, 'Remind', UserInfo.getSessionId(), submitterUser); syncProcessId = Database.executeBatch(batch, 5);**
+
+**Agreement Template Batch**
+  * Takes in a SOQL query and an agreement template record ID. The query is executed to get a set of master object records, each of which is then run through the provided agreement template to generate an agreement record.
+    
+  * This class implements the Salesforce Database.Batchable interface. It can process any number of records, which will be broken down into sets of 5 and processing each set as an individual transaction, which allows governor limits to be respected.
+
+  * The record types returned by the SOQL query must match the provided agreement template master object type. For each record, the agreement template service is invoked.
+    
+  * The Apex batch service is exposed through the following invocation class:
+      **echosign_dev1.AgreementTemplateBatch**
+
+**PARAMETERS**
+        * The following parameters must be specified to initialize a batch operation.
+        * SOQL query to execute, must contain the record ID as a selected field. Any other field is optional.
+        * Agreement template record ID, which will be used in conjunction with the master record ID to load an agreement.
+
+**USAGE EXAMPLE**
+
+    * String agreementTemplateId = [SELECT Id from echosign_dev1__Agreement_Template__c where Name = 'Default Template'];
+    * String soqlQuery = 'SELECT Id from Contact where Account.IsActive = true';
+    * AgreementTemplateBatch batch = new AgreementTemplateBatch(soqlQuery, agreementTemplateId); syncProcessId = Database.executeBatch(batch, 5);
+
+**Agreement Template Service Batch**
+
+    *Takes in a list of master object record ID's and the master object type, which are then queried, and each of which is then run through the provided agreement template       to generate an agreement record. This class implements the Salesforce Database.Batchable interface. 
+
+    * It can process any number of records, which will be broken down into sets of 5 and processing each set as an individual transaction, which allows governor limits to        be respected.
+
+    * The master object type provided must match the provided agreement template master object type. For each record, the agreement template service is invoked.
+       
+    * The Apex batch service is exposed through the following invocation class: echosign_dev1.AgreementTemplateServiceBatch
+
+**PARAMETERS**
+  * The following parameters must be specified to initialize a batch operation.
+  * List of master record ID's.
+  * Agreement template record ID, which will be used in conjunction with the master records to load an agreement.
+  * Master object name to query for the master records.
+
+**USAGE EXAMPLE**
+    * String agreementTemplateId = [SELECT Id from echosign_dev1__Agreement_Template__c where Name = 'Default Template'];
+
+    * AgreementTemplateBatch batch = new AgreementTemplateServiceBatch(new List<Id>{'01p50000000HoMB'}, agreementTemplateId, 'Contact');
+    * syncProcessId = Database.executeBatch(batch, 5);
 
 
 
