@@ -84,9 +84,7 @@ Every method either return the ID of the newly created agreement record or throw
 * The Apex batch service is exposed through the following invocation class: **echosign_dev1.EchoSignActionBatch**
 
 **PARAMETERS**
-* The following parameters must be specified to initialize a batch operation.
-
-* A list of the agreement record ID's on which to perform the provided action. The action to perform, one of the following supported values:
+* The following parameters must be specified to initialize a batch operation. A list of the agreement record ID's on which to perform the provided action. The action to perform, one of the following supported values:
 
 * Remind
 * Send
