@@ -84,7 +84,8 @@ Every method either return the ID of the newly created agreement record or throw
 * The Apex batch service is exposed through the following invocation class: **echosign_dev1.EchoSignActionBatch**
 
 **PARAMETERS**
-* The following parameters must be specified to initialize a batch operation. A list of the agreement record ID's on which to perform the provided action. The action to perform, one of the following supported values:
+* The following parameters must be specified to initialize a batch operation. A list of the agreement record ID's on which to perform the provided action.
+  The action to perform, one of the following supported values:
 
   * Remind
   * Send
@@ -156,6 +157,45 @@ Every method either return the ID of the newly created agreement record or throw
 
   * The web service is exposed from the following URL:
       * https://<instance_name>.salesforce.com/services/apexrest/echosign_dev1/template/load/<template_id>?masterId=<master_id>&varName1=var Value1&varName2=varValue2
+   
+  <img width="455" alt="image" src="https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/fc66608a-982a-4468-82b4-f5e6f81979b0">
+
+**TEMPLATE ID**
+  * The last part of the URL is the ID of the agreement template record in the current Salesforce organization which should be used to load the agreement.
+    
+  * This part of the URL is optional. If omitted, the agreement template marked as the default will be loaded. If the template ID is omitted and no default agreement
+    template ID exists, an error will be returned.
+
+  * The template ID can be in the 15 or 18 character format.
+
+**MASTER ID**
+The masterId parameter specifies which master record should be used to load the agreement from the specific agreement template. This parameter is optional, but must be specified for any agreement template which specifies a master object type and references that master object in the template.
+
+The master ID can be in the 15 or 18 character format.
+
+**RUNTIME VARIABLES**
+Any additional parameters are used as runtime variables, as name-value pairs, used to populate any runtime variables specified in the agreement template.
+
+**RESULT**
+  The REST web service returns a LoadResult object which contains the following fields:
+      agreementId : If the agreement load operation was successful, this contains the ID of the newly created agreement record.
+      error : If there was any error during the loading of the agreement, this field will contain a detailed error message.
+
+**Background Service**
+
+    * The background service capability allows package consumers to invoke various actions on an agreement object by updating the Background Action (echosign_dev1 
+          Background_Actions c) field to the corresponding value. 
+    * Once the field value is changed from a blank value or another value to one of the following values, the action is kicked off from a trigger that is part of the 
+          e-Sign managed package.
+
+        * Remind
+        * Send
+        * Cancel
+        * Delete
+        * Update
+        
+    * All of the actions execute in an asynchronous future mode, so the status will be stored in the Error field on the agreement.
+
 
 
 
