@@ -39,7 +39,7 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 
 * The above-stated error occurs when the agreement status does not change or the data mapping does not run correctly. To resolve this error, look for the offending trigger, process builder, or workflow and deactivate it or switch it to use a synchronous call or schedule it for later.
 
-*** Agreement Template Service***
+**Agreement Template Service**
   
 * The agreement template service is exposed as a global Apex service by the managed package. This allows Apex code outside of the managed package to load agreements based on existing agreement templates. The class and all exposed methods are marked as global to allow such access.
 
