@@ -45,7 +45,10 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 
 * The Apex service is exposed through the following invocation class: echosign_dev1.AgreementTemplateService
 
-* <img width="381" alt="image" src="https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/ba79d646-a591-48a7-9e68-30889f7acbfb">
+![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/edf66b65-146b-4b54-9d84-a9df373f74ab)
+![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/578edd77-c2cc-4318-8699-953a1ea3e6de)
+
+
 
 
 
