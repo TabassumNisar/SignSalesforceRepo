@@ -73,6 +73,11 @@ Every method either return the ID of the newly created agreement record or throw
 
 * The Apex service is exposed through the following invocation class: echosign_dev1.EchoSignApiService
 
+* <img width="453" alt="image" src="https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/82e94c9f-57f2-4a4f-b7a7-bdab0bc7119e">
+* <img width="450" alt="image" src="https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/7968b4ba-f58f-4056-a7ea-6ba85f5e8ea4">
+
+
+
 
 
 
