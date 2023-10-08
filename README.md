@@ -21,11 +21,11 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 **Update Order**
 In v21 the order of updates has changed. Below is the sequence in which the agreement and its related objects are updated:
 
-Attachments 
-Recipients 
-Agreement (status and its other attributes)
-Agreement Events 
-Chatter Feeds 
+* Attachments
+* Recipients
+* Agreement (status and its other attributes)
+* Agreement Events
+* Chatter Feeds 
 
 **Apex Services - Apex Method in use**
 
