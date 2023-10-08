@@ -86,14 +86,14 @@ Every method either return the ID of the newly created agreement record or throw
 **PARAMETERS**
 * The following parameters must be specified to initialize a batch operation. A list of the agreement record ID's on which to perform the provided action. The action to perform, one of the following supported values:
 
-* Remind
-* Send
-* Cancel
-* Delete
-* Update
+  * Remind
+  * Send
+  * Cancel
+  * Delete
+  * Update
 
-* Current user session ID. Only required for an update action type.
-* Submitter user record, used to notify this user through an email once the bulk processing completes.
+    * Current user session ID. Only required for an update action type.
+    * Submitter user record, used to notify this user through an email once the bulk processing completes.
 
 **USAGE EXAMPLE**
 **User submitterUser = UserInfo.getUserId();**
