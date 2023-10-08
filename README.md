@@ -147,6 +147,16 @@ Every method either return the ID of the newly created agreement record or throw
     
     * syncProcessId = Database.executeBatch(batch, 5);
 
+**REST Services**
+  * Agreement Template Service
+      * The agreement template service is exposed as a Salesforce REST web service by the managed package. This allows external systems outside of the Salesforce org to
+          load agreements based on existing agreement templates.
+      * Please refer to the Creating REST APIs using Apex REST article for more details on how to access and invoke custom REST Apex services from within Salesforce.
+          Invocations must provide a valid session ID for authentication and authorization.
+
+  * The web service is exposed from the following URL:
+      * https://<instance_name>.salesforce.com/services/apexrest/echosign_dev1/template/load/<template_id>?masterId=<master_id>&varName1=var Value1&varName2=varValue2
+
 
 
 
