@@ -1,4 +1,4 @@
-# Adobe Acrobat Sign for Salesforce: Developer Guide
+# Adobe Acrobat Sign for Salesforce: Development Guide
 
 **Overview**
 
