@@ -49,10 +49,13 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 ![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/578edd77-c2cc-4318-8699-953a1ea3e6de)
 
 **RUNTIME VARIABLES**
+
 The **echosign_dev1.AgreementTemplateVariable** global class has two global fields.
 
 **name :** The variable name, which must match a runtime variable name configured in the agreement template.
+
 **value :** The value of that variable which will be used during the template load. The value depends on where the variable was used. For example, for a recipient it has to be a contact, lead, or user record ID or an email. For a document variable, it must be an attachment record ID.
+
 **RESULT**
 Every method either return the ID of the newly created agreement record or throws an exception with a detailed error message if something went wrong during the load operation.
 
