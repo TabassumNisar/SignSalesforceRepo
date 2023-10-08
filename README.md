@@ -27,9 +27,7 @@ Agreement (status and its other attributes)
 Agreement Events 
 Chatter Feeds 
 
-**Apex Services**
-
-**Apex Method in use**
+**Apex Services - Apex Method in use**
 
 * Starting from Acrobat Sign for Salesforce V 21.0, all asynchronous processes (which include automatic updates and data mappings) have been switched from future methods to queueable, an approach recommended by Salesforce.
 
