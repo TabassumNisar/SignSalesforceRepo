@@ -77,6 +77,31 @@ Every method either return the ID of the newly created agreement record or throw
   ![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/03f1333b-f0b3-4ebd-8de1-7470e2493cae)
   ![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/09adf22c-f066-4a4f-ab3a-a25849a4bbfc)
 
+**Apex Batch Services**
+
+* Exposes the main e-Sign agreement actions on a bulk level, allowing an operation to be performed on a set of agreements. This class implements the Salesforce Database.Batchable interface. It can process any number of records, which will be broken down into sets of 5 and processing each set as an individual transaction, which allows governor limits to be respected.
+
+* The Apex batch service is exposed through the following invocation class: **echosign_dev1.EchoSignActionBatch**
+
+**PARAMETERS**
+* The following parameters must be specified to initialize a batch operation.
+
+* A list of the agreement record ID's on which to perform the provided action. The action to perform, one of the following supported values:
+
+* Remind
+* Send
+* Cancel
+* Delete
+* Update
+
+* Current user session ID. Only required for an update action type.
+* Submitter user record, used to notify this user through an email once the bulk processing completes.
+
+**USAGE EXAMPLE**
+**User submitterUser = UserInfo.getUserId();**
+
+**EchoSignActionBatch batch = new EchoSignActionBatch( agreementIds, 'Remind', UserInfo.getSessionId(), submitterUser); syncProcessId = Database.executeBatch(batch, 5);**
+
 
 
 
