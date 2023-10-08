@@ -140,8 +140,9 @@ Every method either return the ID of the newly created agreement record or throw
   * Master object name to query for the master records.
 
 **USAGE EXAMPLE**
+
     * String agreementTemplateId = [SELECT Id from echosign_dev1__Agreement_Template__c where Name = 'Default Template'];
-    
+       
     * AgreementTemplateBatch batch = new AgreementTemplateServiceBatch(new List<Id>{'01p50000000HoMB'}, agreementTemplateId, 'Contact');
     
     * syncProcessId = Database.executeBatch(batch, 5);
