@@ -44,7 +44,8 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 * The agreement template service is exposed as a global Apex service by the managed package. This allows Apex code outside of the managed package to load agreements based on existing agreement templates. The class and all exposed methods are marked as global to allow such access.
 
 * The Apex service is exposed through the following invocation class: echosign_dev1.AgreementTemplateService
-
+  
+  **METHODS**
 ![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/edf66b65-146b-4b54-9d84-a9df373f74ab)
 ![image](https://github.com/BalajiMunirathinam/SignSalesforceRepo/assets/43603803/578edd77-c2cc-4318-8699-953a1ea3e6de)
 
