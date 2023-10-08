@@ -19,7 +19,7 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 * The Final Agreement Status names for a terminated agreement are: "Cancelled / Declined", "Canceled / Declined", "Expired"
 
 **Update Order**
-In v21 the order of updates has changed. Below is the sequence in which the agreement and its related objects are updated:
+* In v21 the order of updates has changed. Below is the sequence in which the agreement and its related objects are updated:
 
 * Attachments
 * Recipients
