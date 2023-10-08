@@ -128,11 +128,8 @@ Every method either return the ID of the newly created agreement record or throw
 **Agreement Template Service Batch**
 
     *Takes in a list of master object record ID's and the master object type, which are then queried, and each of which is then run through the provided agreement template       to generate an agreement record. This class implements the Salesforce Database.Batchable interface. 
-
     * It can process any number of records, which will be broken down into sets of 5 and processing each set as an individual transaction, which allows governor limits to        be respected.
-
-    * The master object type provided must match the provided agreement template master object type. For each record, the agreement template service is invoked.
-       
+    * The master object type provided must match the provided agreement template master object type. For each record, the agreement template service is invoked. 
     * The Apex batch service is exposed through the following invocation class: echosign_dev1.AgreementTemplateServiceBatch
 
 **PARAMETERS**
