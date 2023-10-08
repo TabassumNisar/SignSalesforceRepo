@@ -18,3 +18,28 @@ Adobe Acrobat Sign for Salesforce: Developer Guide is designed to help Salesforc
 
 * The Final Agreement Status names for a terminated agreement are: "Cancelled / Declined", "Canceled / Declined", "Expired"
 
+**Update Order**
+In v21 the order of updates has changed. Below is the sequence in which the agreement and its related objects are updated:
+
+Attachments 
+Recipients 
+Agreement (status and its other attributes)
+Agreement Events 
+Chatter Feeds 
+
+**Apex Services**
+
+**Apex Method in use**
+
+* Starting from Acrobat Sign for Salesforce V 21.0, all asynchronous processes (which include automatic updates and data mappings) have been switched from future methods to queueable, an approach recommended by Salesforce.
+
+* With this change, all customizations in the subscriber organization that add jobs to the Salesforce queue as part of the auto-update or data mapping process will fail with an error "System.LimitException: Too many queueable jobs added to the queue: 2". 
+
+* The failure happens because a queueable process can only add one child queueable job, which is already taken up by Acrobat Sign. For details, refer to Queueable Apex Limits.
+
+* Error: "When chaining jobs, you can add only one job from an executing job with System.enqueueJob, which means that only one child job can exist for each parent queueable job. Starting multiple child jobs from the same queueable job isn’t supported."
+
+* The above-stated error occurs when the agreement status does not change or the data mapping does not run correctly. To resolve this error, look for the offending trigger, process builder, or workflow and deactivate it or switch it to use a synchronous call or schedule it for later.
+
+
+
