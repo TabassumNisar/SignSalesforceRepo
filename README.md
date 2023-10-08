@@ -114,15 +114,12 @@ Every method either return the ID of the newly created agreement record or throw
         * The following parameters must be specified to initialize a batch operation.
         
         * SOQL query to execute, must contain the record ID as a selected field. Any other field is optional.
-        
         * Agreement template record ID, which will be used in conjunction with the master record ID to load an agreement.
 
 **USAGE EXAMPLE**
 
     * String agreementTemplateId = [SELECT Id from echosign_dev1__Agreement_Template__c where Name = 'Default Template'];
-    
     * String soqlQuery = 'SELECT Id from Contact where Account.IsActive = true';
-    
     * AgreementTemplateBatch batch = new AgreementTemplateBatch(soqlQuery, agreementTemplateId); syncProcessId = Database.executeBatch(batch, 5);
 
 **Agreement Template Service Batch**
@@ -139,16 +136,12 @@ Every method either return the ID of the newly created agreement record or throw
   * The following parameters must be specified to initialize a batch operation.
     
   * List of master record ID's.
-  *
   * Agreement template record ID, which will be used in conjunction with the master records to load an agreement.
-  *
   * Master object name to query for the master records.
 
 **USAGE EXAMPLE**
     * String agreementTemplateId = [SELECT Id from echosign_dev1__Agreement_Template__c where Name = 'Default Template'];
-    
     * AgreementTemplateBatch batch = new AgreementTemplateServiceBatch(new List<Id>{'01p50000000HoMB'}, agreementTemplateId, 'Contact');
-    
     * syncProcessId = Database.executeBatch(batch, 5);
 
 
