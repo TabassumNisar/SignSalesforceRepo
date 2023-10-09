@@ -5,13 +5,13 @@
 				  intended recipient specified in agreement template
 */
 
-global class AgreementCreateController {
+global class AgreementLoadFrmTempMasterRecController {
 
     public static Id agreementId='';
     public static String masterRecordId='';
     public static String agreementTemplateId='';
 	
-    public AgreementCreateController(){
+    public AgreementLoadFrmTempMasterRecController(){
         loadAgreements();
 	}
 
