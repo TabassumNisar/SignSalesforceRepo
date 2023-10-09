@@ -1,0 +1,44 @@
+/*
+	     Author : Balaji
+	Description : This sample class will query a template by name 'NDA' from Salesforce instance and create and successfully 
+				  send the agreement to the intended recipient specified in agreement template
+				  
+	Acrobat Sign Method Used : static Id load(String templateId)
+	
+	Loads an agreement using the specified agreement template ID, which has no master object type.
+
+*/
+
+global class AgreementLoadFrmTemplateRecController {
+
+    public static Id agreementId='';
+    public static String agreementTemplateId='';
+	
+    public AgreementLoadFrmTemplateRecController(){
+        loadAgreements();
+	}
+
+    global static void loadAgreements(){
+		
+		echosign_dev1__Agreement_Template__c agreementNDATemplate = [SELECT ID FROM echosign_dev1__Agreement_Template__c 
+																		WHERE Name = 'NDA' LIMIT 1];
+										
+		agreementTemplateId = agreementNDATemplate.Id;
+		
+		if(agreementTemplateId!=null)
+			agreementId = echosign_dev1.AgreementTemplateService.load(agreementTemplateId);
+			
+		if(agreementId!=null)
+			sendAgreement();
+    }	
+    
+    
+  public PageReference sendAgreement(){
+	echosign_dev1.EchoSignApiService.sendDocument(agreementId);
+    return null;
+}
+	
+	
+	
+	 
+	 
