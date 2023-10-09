@@ -7,13 +7,13 @@
 
 global class AgreementLoadFrmTempMasterRecController {
 
-    public static Id agreementId='';
+    public static String agreementId='';
     public static String masterRecordId='';
     public static String agreementTemplateId='';
 	
     public AgreementLoadFrmTempMasterRecController(){
         loadAgreements();
-	}
+    }
 
     public static void loadAgreements(){
 		Account  masterAccName = [SELECT Id,Name from Account where Name = 'GenePoint' LIMIT 1];
