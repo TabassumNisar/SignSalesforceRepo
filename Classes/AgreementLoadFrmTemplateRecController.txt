@@ -11,7 +11,7 @@
 
 global class AgreementLoadFrmTemplateRecController {
 
-    public static Id agreementId='';
+    public static String agreementId='';
     public static String agreementTemplateId='';
 	
     public AgreementLoadFrmTemplateRecController(){
@@ -20,8 +20,7 @@ global class AgreementLoadFrmTemplateRecController {
 
     global static void loadAgreements(){
 		
-		echosign_dev1__Agreement_Template__c agreementNDATemplate = [SELECT ID FROM echosign_dev1__Agreement_Template__c 
-																		WHERE Name = 'NDA' LIMIT 1];
+		echosign_dev1__Agreement_Template__c agreementNDATemplate = [SELECT ID FROM echosign_dev1__Agreement_Template__c   														     WHERE Name = 'NDA' LIMIT 1];
 										
 		agreementTemplateId = agreementNDATemplate.Id;
 		
@@ -33,9 +32,10 @@ global class AgreementLoadFrmTemplateRecController {
     }	
     
     
-  public PageReference sendAgreement(){
+  public static void sendAgreement(){
 	echosign_dev1.EchoSignApiService.sendDocument(agreementId);
-    return null;
+    
+  }
 }
 	
 	
