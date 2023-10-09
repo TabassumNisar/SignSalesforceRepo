@@ -32,10 +32,9 @@ global class AgreementLoadFrmTempMasterRecController {
 			sendAgreement();
     }		
     
-    
-  public PageReference sendAgreement(){
+  public static void sendAgreement(){
 	echosign_dev1.EchoSignApiService.sendDocument(agreementId);
-    return null;
+  }
 }
 	
 	
