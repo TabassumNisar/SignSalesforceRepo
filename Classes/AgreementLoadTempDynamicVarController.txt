@@ -1,0 +1,57 @@
+/*
+	     Author : Balaji
+	Description : This sample class will query a template by name 'NDA' and Account 'GenePoint'
+				  from Salesforce instance and create to successfully send the agreement to the 
+				  intended recipient specified in agreement template
+				  
+	Acrobat Sign Method Used : static Id load(String templateId, String masterId, Map<String,AgreementTemplateVariable> agreementTemplateVariables)
+				 
+	Loads an agreement using the specified agreement template ID and the specified master record ID, whose type must match the master 
+	object type configured in the specified agreement template. Also passes in the specified runtime variables as name value pairs.
+
+*/
+
+global class AgreementLoadTempDynamicVarController {
+
+    public static String agreementId='';
+    public static String masterRecordId='';
+    public static String agreementTemplateId='';
+	public static String HRVar = 'HR';
+    public static Map<String,echosign_dev1.AgreementTemplateVariable> agreemtTempVarMap = new Map<String,echosign_dev1.AgreementTemplateVariable>();
+	
+    public AgreementLoadTempDynamicVarController(){
+        loadAgreements();
+	}
+
+    public static void loadAgreements(){
+	
+		Account  masterAccName = [SELECT Id,Name from Account where Name = 'GenePoint' LIMIT 1];
+		
+		Contact conUsr= [Select Id, Name , Email From Contact Where Account.Name = 'GenePoint' 
+                            AND Name='Balaji MS'];
+		
+		String contactEmail = conUsr.Email;
+		
+		echosign_dev1__Agreement_Template__c agreementHRTemplate = [SELECT ID 
+										FROM echosign_dev1__Agreement_Template__c 
+										WHERE Name = 'HR'
+										LIMIT 1
+									 ];
+		masterRecordId = masterAccName.Id;
+		agreementTemplateId = agreementHRTemplate.Id;
+		
+		agreemtTempVarMap.put('UserEmail',new echosign_dev1.AgreementTemplateVariable('SignerEmail',contactEmail));
+        
+        if(masterRecordId !=null && agreementTemplateId!=null && agreemtTempVarMap!=null)
+			agreementId = echosign_dev1.AgreementTemplateService.load(agreementTemplateId, masterRecordId, agreemtTempVarMap);
+			
+		if(agreementId!=null)
+			sendAgreement();
+    }	
+    
+    
+	public static void sendAgreement(){
+		echosign_dev1.EchoSignApiService.sendDocument(agreementId);
+    }
+
+}
