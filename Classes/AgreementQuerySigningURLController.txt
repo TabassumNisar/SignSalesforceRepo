@@ -1,0 +1,36 @@
+/*
+	     Author : Balaji
+	Description : This sample class will query a agreement record from Account 'GenePoint' that was sent for Signature
+				  from Salesforce instance and retrieves the signing URL from Apex to be displayed on the UI.
+				  
+	Acrobat Sign Method Used : static List<EchoSignApiService.SigningUrl> getSigningUrls(Id agreementId) 
+				 
+	Retrieves all signing URL's for the specified agreement ID.
+*/
+
+global class AgreementQuerySigningURLController {
+
+    public static String agreementId='';
+	
+	public static List<echosign_dev1.EchoSignApiService.SigningUrl> signAgmtUrl;
+	
+    public AgreementQuerySigningURLController(){
+	    signAgmtUrl = new List<echosign_dev1.EchoSignApiService.SigningUrl>();
+        signingURLAgreements();
+	}
+
+    public static void signingURLAgreements(){
+	
+		Account  masterAccount = [SELECT Id,Name from Account where Name = 'GenePoint' LIMIT 1];
+        String accId = masterAccount.Id;
+		
+		echosign_dev1__SIGN_Agreement__c agreementRecObj = [SELECT ID,echosign_dev1__Account__c FROM echosign_dev1__SIGN_Agreement__c WHERE echosign_dev1__Account__c =:accId LIMIT 1 ];
+		
+		agreementId = agreementRecObj.Id;
+		
+		if(agreementId !=null)
+			signAgmtUrl = echosign_dev1.EchoSignApiService.getSigningUrls(agreementId);
+			system.debug('Agreement Signing URL'+signAgmtUrl);
+	}	
+    
+}
