@@ -1,0 +1,31 @@
+/*
+	     Author : Balaji
+	Description : This sample class will query a agreement record from Account 'GenePoint' that was sent for Signature
+				  from Salesforce instance and Cancels it by calling cancel method of AdobeSign
+				  
+	Acrobat Sign Method Used : static void cancelDocument(Id agreementId)
+				 
+	Cancels the agreement with the specified agreement ID.
+*/
+
+global class AgreementCancelController {
+
+    public static String agreementId='';
+    public AgreementCancelController(){
+        cancelAgreements();
+	}
+
+    public static void cancelAgreements(){
+	
+		Account  masterAccName = [SELECT Id,Name from Account where Name = 'GenePoint' LIMIT 1];
+		
+		echosign_dev1__SIGN_Agreement__c agreementCancelRec = [SELECT ID FROM echosign_dev1__SIGN_Agreement__c 
+										WHERE echosign_dev1__Account__c =: masterAccName.Id LIMIT 1 ];
+		
+		agreementId = agreementCancelRec.Id;
+		
+		if(agreementId !=null)
+			echosign_dev1.EchoSignApiService.cancelDocument(agreementId);
+	}	
+    
+}
