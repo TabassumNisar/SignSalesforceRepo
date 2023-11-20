@@ -1,0 +1,121 @@
+/*
+	     Author : Tabassum Nisar
+	Description : This sample class will create a an agreement from the agreement template and update the fields through background actions.
+				  
+	Acrobat Sign Method Used : static Id load(String templateId, String masterId, Map<String,AgreementTemplateVariable> agreementTemplateVariables)
+				 
+	Loads an agreement using the specified agreement template ID and the specified master record ID, whose type must match the master 
+	object type configured in the specified agreement template. Also passes in the specified runtime variables as name value pairs.
+
+*/
+
+
+public class SendAgreementController {
+    public ID oppId{get;set;}
+    public SendAgreementController(ApexPages.StandardController cnt){
+        this.oppId = cnt.getId();
+    }
+    
+    public PageReference sendAgreement(){
+        
+        Savepoint sp = Database.setSavepoint();
+        try{
+            
+            ID opportunityID = this.oppId;
+            ID templateId = 'a0E4I00000y1PRVUA2';	//template workflow A (only 1 recipient)
+            //ID templateId = 'a0E4I00000xyPupUAE';
+            //create a new agreement given a Template ID
+            ID agreementId = echosign_dev1.AgreementTemplateService.load(templateId, opportunityID);
+           
+            echosign_dev1__SIGN_Agreement__c agreement = [Select Id From echosign_dev1__SIGN_Agreement__c Where Id = :agreementId];
+            Opportunity oppty = [Select Id, ContactId, AccountId,ContractId From Opportunity Where Id = :opportunityID];
+			
+            //deletes any recipienti automatically created
+            delete [select id from echosign_dev1__SIGN_Recipients__c where echosign_dev1__Agreement__c = :agreementId];
+            
+            //loads the primary contact
+            Contact cnt = [ Select Id, Name, MobilePhone From Contact Where Id = :oppty.ContactId];
+            
+           
+            //creates the recipient from the primary contact
+            insert new echosign_dev1__SIGN_Recipients__c(
+                echosign_dev1__Agreement__c = agreementId,
+                echosign_dev1__Contact__c = oppty.ContactId,
+                echosign_dev1__Recipient_Type__c = 'Contact',
+                echosign_dev1__Order_Number__c = 1,
+                echosign_dev1__Participant_Set_Order_Number__c = 1,
+                echosign_dev1__Recipient_Role__c = 'Signer',
+                echosign_dev1__Recipient_Workflow_Label__c = 'Signer',
+                echosign_dev1__Signer_Verification_Method__c = 'Phone',
+                echosign_dev1__Phone_Verification_Phone_Number__c = cnt.MobilePhone,
+                echosign_dev1__Phone_Verification_Country_Code__c = '39'
+            
+            );
+            
+            
+            
+            
+            /*
+             * //creates a signer from current user
+            User currentUser = [Select Id, Name From User WHere Id = :UserInfo.getUserId()];
+            insert new echosign_dev1__SIGN_Recipients__c(
+                echosign_dev1__Agreement__c = agreementId,
+                echosign_dev1__User__c = currentUser.Id,
+                Name = currentUser.Name,
+                echosign_dev1__Recipient_Type__c = 'User',
+                echosign_dev1__Order_Number__c = 2,
+                echosign_dev1__Participant_Set_Order_Number__c = 2,
+                echosign_dev1__Recipient_Role__c = 'Certified Recipient',
+                echosign_dev1__Recipient_Workflow_Label__c = 'Recipient'
+            
+            );*/
+            
+            /*//creates an attachment using the first ContentDocument found on the given opportunity (if any)
+            ContentDocumentLink docLink = [SELECT Id, ContentDocument.FileType, ContentDocument.Title, ContentDocument.LatestPublishedVersion.VersionData 
+                    FROM ContentDocumentLink WHERE LinkedEntityId = :opportunityId];
+            Attachment att = new Attachment(ParentId = agreementId, 
+                Name = docLink.ContentDocument.Title+'.pdf', 
+                Description = docLink.ContentDocument.Title, 
+                ContentType=docLink.ContentDocument.FileType,
+                Body = docLink.ContentDocument.LatestPublishedVersion.VersionData);
+            
+            	insert att;*/
+        
+            
+            
+            //update agreement's info
+            //agreement.echosign_dev1__Attachment_ID_Order2__c = att.Id;
+            agreement.echosign_dev1__Message__c = 'Email body bla bla bla';
+            agreement.Name='TEST 123 '+System.now();
+            agreement.echosign_dev1__Recipient__c=oppty.ContactId;
+            agreement.echosign_dev1__Opportunity__c = opportunityID;
+            agreement.echosign_dev1__Account__c = oppty.AccountId;
+            agreement.echosign_dev1__Contract__c = oppty.ContractId;
+            agreement.echosign_dev1__AgreementLocale__c = 'Italian (Italy)';
+            //agreement.echosign_dev1__Background_Action__c = 'Send';	//this should automatically trigger the send action??
+            //this triggers a null pointer exception after the background job is completed
+     
+            update agreement;
+            
+          
+            System.debug('### Agreement Id :'+agreementId);
+            echosign_dev1.EchoSignApiService.updateAgreement(agreementId);
+            
+            //THIS GETS A NULL POINTER EXCEPTION
+            echosign_dev1.EchoSignApiService.SendDocumentResult sendResult = echosign_dev1.EchoSignApiService.sendDocument(agreementId);
+            /*system.debug('sendResult' +sendResult);
+            if(sendResult.error != null){
+                throw sendResult.error;
+            } */
+            
+            PageReference pg = new PageReference('/'+this.oppId);
+            pg.setRedirect(true);
+            return pg;
+        }catch(exception e){
+            Database.rollback(sp);
+            system.debug(e);
+            throw e;
+        }
+  
+    }
+}
